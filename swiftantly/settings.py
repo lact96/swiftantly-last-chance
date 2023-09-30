@@ -10,23 +10,24 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
+from dotenv import load_dotenv
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-nq^3w&@f#0mrs)xtes_ma!^+#f0@imnf20432d3(0ga4*v25c6'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -37,6 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'blog',
+    'cold_emails',
+    'crm',
+    'customer_service',
+    'funnelbuilder',
+    'lms',
+    'membership',
+    'own_emails',
+    'warm_emails',
+    'warm_up_bots',
+    'workspace',
 ]
 
 MIDDLEWARE = [
@@ -72,15 +84,31 @@ WSGI_APPLICATION = 'swiftantly.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME_DEV'),
+            'USER': os.getenv('DB_USER_DEV'),
+            'PASSWORD': os.getenv('DB_PASSWORD_DEV'),
+            'HOST': os.getenv('DB_HOST_DEV'),
+            'PORT': os.getenv('DB_PORT_DEV'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME_PROD'),
+            'USER': os.getenv('DB_USER_PROD'),
+            'PASSWORD': os.getenv('DB_PASSWORD_PROD'),
+            'HOST': os.getenv('DB_HOST_PROD'),
+            'PORT': os.getenv('DB_PORT_PROD'),
+        }
+    }
 
 
+AUTH_USER_MODEL = 'workspace.CustomUser'
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
