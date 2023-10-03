@@ -1,0 +1,12 @@
+{% autoescape off %}
+Hi {{ user.first_name }},
+
+Please click on the link below to confirm your registration:
+
+http://{{ domain }}{% url 'workspace:activate' uidb64=uid token=token %}
+
+If you didn't register, please ignore this email.
+
+Thanks,
+Swiftantly Team
+{% endautoescape %}
