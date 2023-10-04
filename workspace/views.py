@@ -8,9 +8,22 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm
+
 from .models import *
+from django.views import View
+from django.urls import reverse_lazy
+from django.views.generic.edit import FormView
 
 User = get_user_model()
+class LoginView(FormView):
+    template_name = 'account/login.html'
+    form_class = AuthenticationForm
+    success_url = reverse_lazy('workspace:dashboard')
+
+    def form_valid(self, form):
+        login(self.request, form.get_user())
+        return super().form_valid(form)
 
 def register(request):
     if request.method == 'POST':
