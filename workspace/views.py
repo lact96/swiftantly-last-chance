@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes, force_text
+from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import get_user_model
 from .models import *
@@ -37,7 +37,7 @@ def register(request):
             return redirect('account_activation_sent')
     else:
         form = CustomUserCreationForm()
-    return render(request, 'account/register.html', {'form': form})
+    return render(request, 'account/signup.html', {'form': form})
 
 def activate(request, uidb64, token):
     try:
@@ -58,3 +58,6 @@ def activate(request, uidb64, token):
         return redirect('workspace_created')  # Redirect to a view that confirms the workspace creation
     else:
         return render(request, 'account/activation_invalid.html')
+    
+def dashboard(request):
+    return render(request, 'dashboards/index.html')

@@ -4,7 +4,7 @@
 <div class="app-menu navbar-menu">
     <!-- LOGO -->
     <div class="navbar-brand-box">
-        <a href="{% url 'dashboards:dashboard' %}" class="logo logo-dark">
+        <a href="/dashboard/" class="logo logo-dark">
             <span class="logo-sm">
                 <img src="{% static 'images/logo-sm.png' %}" alt="" height="22">
             </span>
@@ -12,7 +12,7 @@
                 <img src="{% static 'images/logo-dark.png' %}" alt="" height="22">
             </span>
         </a>
-        <a href="{% url 'dashboards:dashboard' %}" class="logo logo-light">
+        <a href="/dashboard/" class="logo logo-light">
             <span class="logo-sm">
                 <img src="{% static 'images/logo-sm.png' %}" alt="" height="22">
             </span>
@@ -46,7 +46,7 @@
                                 <a href="#" class="nav-link" data-key="t-crm"> CRM </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{% url 'dashboards:dashboard' %}" class="nav-link" data-key="t-ecommerce"> Ecommerce </a>
+                                <a href="dashboard/" class="nav-link" data-key="t-ecommerce"> Ecommerce </a>
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link" data-key="t-learning"> Learning </a>
@@ -63,20 +63,9 @@
                         <i class="ph-layout"></i> <span data-key="t-layouts">Layouts</span> <span class="badge badge-pill bg-danger" data-key="t-hot">Hot</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarLayouts">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{% url 'layouts:horizontal' %}" target="_blank" class="nav-link" data-key="t-horizontal">Horizontal</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{% url 'layouts:detached' %}" target="_blank" class="nav-link" data-key="t-detached">Detached</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{% url 'layouts:two_column' %}" target="_blank" class="nav-link" data-key="t-two-column">Two Column</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{% url 'layouts:vertical-hovered' %}" target="_blank" class="nav-link" data-key="t-hovered">Hovered</a>
-                            </li>
-                        </ul>
+                    <!--    <ul class="nav nav-sm flex-column">
+
+                        </ul>-->
                     </div>
                 </li>
 
@@ -306,55 +295,20 @@
                     <div class="collapse menu-dropdown" id="sidebarAuth">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{% url 'pages:authentication.signin' %}" class="nav-link" role="button" data-key="t-signin"> Sign In </a>
+                                <a href="login/" class="nav-link" role="button" data-key="t-signin"> Sign In </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{% url 'pages:authentication.signup' %}" class="nav-link" role="button" data-key="t-signup"> Sign Up </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{% url 'pages:authentication.pass_reset' %}" class="nav-link" role="button" data-key="t-password-reset">
-                                    Password Reset
-                                </a>
+                                <a href="register" class="nav-link" role="button" data-key="t-signup"> Sign Up </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="{% url 'pages:authentication.change' %}" class="nav-link" role="button" data-key="t-password-create">
-                                    Password Create
-                                </a>
+                                <a href="logout/" class="nav-link" role="button" data-key="t-logout"> Logout </a>
                             </li>
 
-                            <li class="nav-item">
-                                <a href="{% url 'pages:authentication.lockscreen' %}" class="nav-link" role="button" data-key="t-lock-screen">
-                                    Lock Screen
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{% url 'pages:authentication.logout' %}" class="nav-link" role="button" data-key="t-logout"> Logout </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{% url 'pages:authentication.success_msg' %}" class="nav-link" role="button" data-key="t-success-message"> Success Message </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{% url 'pages:authentication.twostep_verification' %}" class="nav-link" role="button" data-key="t-two-step-verification"> Two Step Verification </a>
-                            </li>
-                            <li class="nav-item">
                                 <a href="#sidebarErrors" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarErrors" data-key="t-errors"> Errors </a>
                                 <div class="collapse menu-dropdown" id="sidebarErrors">
                                     <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="{% url 'pages:authentication.404_error' %}" class="nav-link" data-key="t-404-error"> 404 Error </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="{% url 'pages:authentication.500_error' %}" class="nav-link" data-key="t-500"> 500 </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="{% url 'pages:authentication.503_error' %}" class="nav-link" data-key="t-503"> 503 </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="{% url 'pages:authentication.offline' %}" class="nav-link" data-key="t-offline-page"> Offline Page </a>
-                                        </li>
+
                                     </ul>
                                 </div>
                             </li>
@@ -368,9 +322,7 @@
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarPages">
                         <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{% url 'pages:pages.starter' %}" class="nav-link" data-key="t-starter"> Starter </a>
-                            </li>
+
                             <li class="nav-item">
                                 <a href="#" class="nav-link" data-key="t-profile"> Profile </a>
                             </li>
@@ -390,12 +342,7 @@
                             <li class="nav-item">
                                 <a href="#" class="nav-link" data-key="t-pricing"> Pricing </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{% url 'pages:pages.maintenance' %}" class="nav-link" data-key="t-maintenance"> Maintenance </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{% url 'pages:pages.coming_soon' %}" class="nav-link" data-key="t-coming-soon"> Coming Soon </a>
-                            </li>
+
                             <li class="nav-item">
                                 <a href="#" class="nav-link" data-key="t-privacy-policy"> Privacy Policy </a>
                             </li>

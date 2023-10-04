@@ -6,7 +6,7 @@
             <div class="d-flex">
                 <!-- LOGO -->
                 <div class="navbar-brand-box horizontal-logo">
-                    <a href="{% url 'dashboards:dashboard' %}" class="logo logo-dark">
+                    <a href="dashboard/" class="logo logo-dark">
                         <span class="logo-sm">
                             <img src="{% static 'images/logo-sm.png' %}" alt="" height="22">
                         </span>
@@ -15,7 +15,7 @@
                         </span>
                     </a>
 
-                    <a href="{% url 'dashboards:dashboard' %}" class="logo logo-light">
+                    <a href="dashboard/" class="logo logo-light">
                         <span class="logo-sm">
                             <img src="{% static 'images/logo-sm.png' %}" alt="" height="22">
                         </span>
@@ -47,8 +47,8 @@
                             </div>
                 
                             <div class="dropdown-item bg-transparent text-wrap">
-                                <a href="{% url 'dashboards:dashboard' %}" class="btn btn-subtle-secondary btn-sm btn-rounded">how to setup <i class="mdi mdi-magnify ms-1"></i></a>
-                                <a href="{% url 'dashboards:dashboard' %}" class="btn btn-subtle-secondary btn-sm btn-rounded">buttons <i class="mdi mdi-magnify ms-1"></i></a>
+                                <a href="dashboard/" class="btn btn-subtle-secondary btn-sm btn-rounded">how to setup <i class="mdi mdi-magnify ms-1"></i></a>
+                                <a href="dashboard/" class="btn btn-subtle-secondary btn-sm btn-rounded">buttons <i class="mdi mdi-magnify ms-1"></i></a>
                             </div>
                             <!-- item-->
                             <div class="dropdown-header mt-2">
@@ -624,15 +624,15 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#"><i class="mdi mdi-wallet text-muted fs-lg align-middle me-1"></i> <span class="align-middle">Balance : <b>$8451.36</b></span></a>
                         <a class="dropdown-item" href="#"><span class="badge bg-success-subtle text-success mt-1 float-end">New</span><i class="mdi mdi-cog-outline text-muted fs-lg align-middle me-1"></i> <span class="align-middle">Settings</span></a>
-                        <a class="dropdown-item" href="{% url 'pages:authentication.lockscreen' %}"><i class="mdi mdi-lock text-muted fs-lg align-middle me-1"></i> <span class="align-middle">Lock screen</span></a>
+                        <a class="dropdown-item" href="lock_screen"><i class="mdi mdi-lock text-muted fs-lg align-middle me-1"></i> <span class="align-middle">Lock screen</span></a>
                     
                         {% if user.is_authenticated %}
                             
-                            <a class="dropdown-item" href="{% url 'account_change_password' %}">
+                            <a class="dropdown-item" href="change_password/">
                                 <i class="mdi mdi-key text-muted fs-lg align-middle me-1"></i> 
                                 <span class="align-middle">Change Password</span></a>
                            
-                            <a class="dropdown-item" href="{% url 'account_logout' %}">
+                            <a class="dropdown-item" href="logout/">
                                 <i class="mdi mdi-logout text-muted fs-lg align-middle me-1"></i> 
                                 <span class="align-middle" data-key="t-logout">Logout</span></a>
                         {% endif %}

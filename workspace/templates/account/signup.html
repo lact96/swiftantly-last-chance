@@ -1,7 +1,7 @@
 {% extends 'account/base.html' %}
 {% load static %}
 {% load i18n %}
-{% load account socialaccount %}
+
 {% load crispy_forms_tags %}
 
 {% block title %}Sign Up{% endblock title %}
@@ -12,10 +12,10 @@
                         <div class="card-body p-sm-5 m-lg-4">
                             <div class="text-center mt-2">
                                 <h5 class="fs-3xl">Create your free account</h5>
-                                <p class="text-muted">Get your free Steex account now</p>
+                                <p class="text-muted">Get your free Swiftantly account now</p>
                             </div>
                             <div class="p-2 mt-5">
-                                <form class="needs-validation" novalidate method="POST" action="{% url 'account_signup' %}">
+                                <form class="needs-validation" novalidate method="POST">
                                     {% for message in messages %}
                                     <div class="alert {{ message.tags }} mb-4" role="alert">
                                         <strong>{{ message }}</strong>
@@ -33,9 +33,6 @@
                                     <div class="mb-3">
                                         {{form.email|as_crispy_field }}
                                     </div>
-                                    <div class="mb-3">
-                                        {{form.username|as_crispy_field }}
-                                    </div>
 
                                     <div class="mb-3">
                                         {{form.password1|as_crispy_field }}
@@ -46,7 +43,7 @@
                                     </div>
 
                                     <div class="mb-4">
-                                        <p class="mb-0 fs-xs text-muted fst-italic">By registering you agree to the Steex <a href="{% url 'pages:pages.term_conditions' %}" class="text-primary text-decoration-underline fst-normal fw-medium">Terms of Use</a></p>
+                                        <p class="mb-0 fs-xs text-muted fst-italic">By registering you agree to the Swiftantly <a href="/t&c/" class="text-primary text-decoration-underline fst-normal fw-medium">Terms of Use</a></p>
                                     </div>
 
 
@@ -61,14 +58,14 @@
 
                                         <div>
                                             
-                                            <a href="{% provider_login_url 'google' %}" class="btn btn-subtle-danger btn-icon"><i class="ri-google-fill fs-lg"></i></a>
+                                            <a href="#" class="btn btn-subtle-danger btn-icon"><i class="ri-google-fill fs-lg"></i></a>
                                             
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div class="mt-4 text-center">
-                                <p class="mb-0">Already have an account ? <a href="{{ login_url }}" class="fw-semibold text-primary text-decoration-underline"> Signin </a> </p>
+                                <p class="mb-0">Already have an account ? <a href="/login/" class="fw-semibold text-primary text-decoration-underline"> Signin </a> </p>
                             </div>
                         </div><!-- end card body -->
                     </div><!-- end card -->
