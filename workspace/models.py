@@ -1,7 +1,14 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+from django.core.management import call_command
+import crypt, random, string
+class VirtualDomain(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return self.name
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -29,6 +36,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # Additional fields
     company_name = models.CharField(max_length=100)
     company_address = models.TextField()
+    is_email_user = models.BooleanField(default=False)
+    domain = models.ForeignKey(VirtualDomain, on_delete=models.CASCADE, blank=True, null=True)
     
     # SMTP and IMAP for OWN SMTP User
     smtp_server = models.CharField(max_length=100, blank=True, null=True)
@@ -47,6 +56,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+    def save(self, *args, **kwargs):
+        if self.is_email_user:
+            salt = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(8))
+            hashed_password = crypt.crypt(self.password, f"$6${salt}$")
+        super().save(*args, **kwargs)
+        
+        if self.is_email_user:
+            call_command('update_email_config', hashed_password=hashed_password)
+
 
 # Workspace Model
 class Workspace(models.Model):
