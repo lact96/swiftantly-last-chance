@@ -2,6 +2,9 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.utils import timezone
 from django.core.management import call_command
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 import crypt, random, string
 class VirtualDomain(models.Model):
     name = models.CharField(max_length=50)
@@ -39,16 +42,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_email_user = models.BooleanField(default=False)
     domain = models.ForeignKey(VirtualDomain, on_delete=models.CASCADE, blank=True, null=True)
     
-    # SMTP and IMAP for OWN SMTP User
-    smtp_server = models.CharField(max_length=100, blank=True, null=True)
-    imap_server = models.CharField(max_length=100, blank=True, null=True)
-    smtp_port = models.IntegerField(blank=True, null=True)
-    imap_port = models.IntegerField(blank=True, null=True)
-    smtp_username = models.CharField(max_length=100, blank=True, null=True)
-    smtp_password = models.CharField(max_length=100, blank=True, null=True)
-    imap_username = models.CharField(max_length=100, blank=True, null=True)
-    imap_password = models.CharField(max_length=100, blank=True, null=True)
-
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
@@ -58,13 +51,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.email
     
     def save(self, *args, **kwargs):
-        if self.is_email_user:
-            salt = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(8))
-            hashed_password = crypt.crypt(self.password, f"$6${salt}$")
         super().save(*args, **kwargs)
-        
-        if self.is_email_user:
-            call_command('update_email_config', hashed_password=hashed_password)
+    
 
 
 # Workspace Model
@@ -77,3 +65,21 @@ class Workspace(models.Model):
 
     def __str__(self):
         return self.name
+    
+class EmailUser(models.Model):
+    custom_user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='email_user')
+    email_address = models.EmailField(unique=True)
+    hashed_password = models.CharField(max_length=128)
+
+    def save(self, *args, **kwargs):
+        salt = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(8))
+        self.hashed_password = crypt.crypt(self.custom_user.password, f"$6${salt}$")
+        super().save(*args, **kwargs)
+        
+@receiver(post_save, sender=CustomUser)
+def create_or_update_email_user(sender, instance, created, **kwargs):
+    if instance.is_email_user:
+        EmailUser.objects.get_or_create(
+            custom_user=instance,
+            defaults={'email_address': instance.email}
+        )
