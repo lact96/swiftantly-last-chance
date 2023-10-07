@@ -4,3 +4,5 @@ from .models import *
 
 admin.site.register(Workspace)
 admin.site.register(CustomUser)
+admin.site.register(VirtualDomain)
+admin.site.register(EmailUser)

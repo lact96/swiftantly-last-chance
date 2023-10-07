@@ -14,7 +14,8 @@ from .models import *
 from django.views import View
 from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
-
+from rest_framework import viewsets
+from .serializers import EmailSettingsSerializer, DomainEmailSettingsSerializer
 User = get_user_model()
 class LoginView(FormView):
     template_name = 'account/login.html'
@@ -74,3 +75,13 @@ def activate(request, uidb64, token):
     
 def dashboard(request):
     return render(request, 'dashboards/index.html')
+
+
+
+class EmailSettingsViewSet(viewsets.ModelViewSet):
+    queryset = EmailSettings.objects.all()
+    serializer_class = EmailSettingsSerializer
+
+class DomainEmailSettingsViewSet(viewsets.ModelViewSet):
+    queryset = DomainEmailSettings.objects.all()
+    serializer_class = DomainEmailSettingsSerializer
