@@ -13,6 +13,12 @@ Abstract:xxx
 - pytorch
 - numpy
 
+## Runserver
+brew install ngrok
+ngrok config add-authtoken 2WQIPXlWieEmOEOAg2sjneoEGyS_4HnWp6XijHP9YncUobdxY 
+ngrok tunnel --label edge=edghts_2WQKD7nhW6F70J31zGxD4WoL366 http://localhost:8000
+1. On another terminal: python manage.py runserver localhost:8000
+
 ## Dataset Preparation
 | Dataset | Download |
 | ---     | ---   |
