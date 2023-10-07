@@ -55,6 +55,9 @@ INSTALLED_APPS = [
     'rest_framework',
 ]
 
+CSRF_TRUSTED_ORIGINS = ["https://*.swiftantly.com", 'https://*.adversely-concise-mongrel.ngrok-free.app']
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
