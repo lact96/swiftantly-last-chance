@@ -15,6 +15,7 @@ from django.views import View
 from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
 from rest_framework import viewsets
+from .email_handler import EmailHandler
 
 User = get_user_model()
 class LoginView(FormView):
@@ -78,3 +79,12 @@ def dashboard(request):
 
 
 
+def emailhandler_view(request):
+    user_email = request.user.emailuser.email  # Assuming EmailUser has an email field
+    user_password = request.user.emailuser.password  # Assuming EmailUser has a password field
+    domain = request.user.emailuser.virtual_domain.domain  # Assuming VirtualDomain has a domain field
+
+    email_handler = EmailHandler(user_email, user_password, domain)
+    email_handler.login()
+    email_handler.send_email("to_email_here", "Test Subject", "Test Body")
+    email_handler.logout()
