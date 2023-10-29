@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.core.management import call_command
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import logging
 
 import crypt, random, string
 class VirtualDomain(models.Model):
@@ -65,7 +66,9 @@ class Workspace(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+logger = logging.getLogger(__name__)
+
 class EmailUser(models.Model):
     custom_user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='email_user')
     email_address = models.EmailField(unique=True)
@@ -74,6 +77,7 @@ class EmailUser(models.Model):
     def save(self, *args, **kwargs):
         salt = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(8))
         self.hashed_password = crypt.crypt(self.custom_user.password, f"$6${salt}$")
+        logger.debug(f"Hashed password for {self.email_address}: {self.hashed_password}")
         super().save(*args, **kwargs)
         
 @receiver(post_save, sender=CustomUser)
@@ -123,3 +127,28 @@ class EmailSettings(models.Model):
     def __str__(self):
         return f"Settings-{self.id}"
 
+class EmailRule(models.Model):
+    AUTO_REPLY = 'Auto-Reply'
+    FORWARD = 'Forward'
+    SPAM_FILTER = 'Spam Filter'
+    RULE_TYPE_CHOICES = [
+        (AUTO_REPLY, 'Auto-Reply'),
+        (FORWARD, 'Forward'),
+        (SPAM_FILTER, 'Spam Filter'),
+    ]
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    rule_type = models.CharField(max_length=50, choices=RULE_TYPE_CHOICES)
+    condition = models.CharField(max_length=200)
+    action = models.CharField(max_length=200)
+
+class EmailSetting(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    auto_reply = models.TextField(null=True, blank=True)
+    forwarding_email = models.EmailField(null=True, blank=True)
+    spam_filter_level = models.IntegerField(default=1)
+    signature = models.TextField(null=True, blank=True)
+    vacation_mode_start = models.DateField(null=True, blank=True)
+    vacation_mode_end = models.DateField(null=True, blank=True)
+    vacation_message = models.TextField(null=True, blank=True)
+    read_receipt = models.BooleanField(default=False)
+    email_priority = models.IntegerField(default=1)

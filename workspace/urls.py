@@ -11,6 +11,7 @@ urlpatterns = [
         views.activate, name='activate'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('login/', views.LoginView.as_view(), name='login'),
+    path('email_dashboard/', views.email_dashboard, name='email_dashboard'),
 
 ]
 

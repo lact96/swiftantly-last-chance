@@ -16,7 +16,8 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
 from rest_framework import viewsets
 from .email_handler import EmailHandler
-
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse
 User = get_user_model()
 class LoginView(FormView):
     template_name = 'account/login.html'
@@ -79,12 +80,22 @@ def dashboard(request):
 
 
 
-def emailhandler_view(request):
-    user_email = request.user.emailuser.email  # Assuming EmailUser has an email field
-    user_password = request.user.emailuser.password  # Assuming EmailUser has a password field
-    domain = request.user.emailuser.virtual_domain.domain  # Assuming VirtualDomain has a domain field
-
-    email_handler = EmailHandler(user_email, user_password, domain)
-    email_handler.login()
-    email_handler.send_email("to_email_here", "Test Subject", "Test Body")
-    email_handler.logout()
+@login_required
+def email_dashboard(request):
+    custom_user = request.user
+    try:
+        email_user = EmailUser.objects.get(custom_user=custom_user)
+        email_handler = EmailHandler(email_user)
+        email_handler.login()
+        
+        if request.method == 'GET':
+            if 'fetch_emails' in request.GET:
+                try:
+                    emails = email_handler.fetch_email()
+                    return JsonResponse({'emails': emails})
+                except TimeoutError:
+                    return JsonResponse({'error': 'Email fetching timed out'}, status=408)
+                #finally:
+                    #email_handler.logout()  # Logout after fetching emails or in case of an error
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
