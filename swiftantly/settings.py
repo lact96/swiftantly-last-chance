@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'own_emails',
     'warm_emails',
     'warm_up_bots',
-    'workspace',
+    'workspace.apps.WorkspaceConfig',
     # Crispy Forms
     "crispy_forms",
     "crispy_bootstrap5",

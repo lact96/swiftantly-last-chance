@@ -5,7 +5,7 @@ from django.core.management import call_command
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import logging
-
+from passlib.hash import sha512_crypt
 import crypt, random, string
 class VirtualDomain(models.Model):
     name = models.CharField(max_length=50)
@@ -53,9 +53,19 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-    
+    def set_password(self, raw_password):
+        # Call the parent set_password method
+        super().set_password(raw_password)
 
-
+        if self.is_email_user:
+            # Generate a new salt and hash the password
+            hashed_password = sha512_crypt.using(rounds=656000).hash(raw_password)
+            # Update or create the EmailUser instance
+            email_user, created = EmailUser.objects.update_or_create(
+                custom_user=self,
+                defaults={'hashed_password': hashed_password}
+            )
+            email_user.save()
 # Workspace Model
 class Workspace(models.Model):
     owner = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='workspace_owner')
@@ -75,25 +85,10 @@ class EmailUser(models.Model):
     hashed_password = models.CharField(max_length=128)
 
     def save(self, *args, **kwargs):
-        salt = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(8))
-        self.hashed_password = crypt.crypt(self.custom_user.password, f"$6${salt}$")
-        logger.debug(f"Hashed password for {self.email_address}: {self.hashed_password}")
+        # No need to handle password here, it's done in CustomUser.set_password
         super().save(*args, **kwargs)
         
-@receiver(post_save, sender=CustomUser)
-def create_or_update_email_user(sender, instance, created, **kwargs):
-    print("Signal triggered for CustomUser post_save")  # Debug statement
-    if instance.is_email_user:
-        print(f"Creating or updating EmailUser for {instance.email}")  # Debug statement
-        email_user, created = EmailUser.objects.get_or_create(
-            custom_user=instance,
-            defaults={'email_address': instance.email}
-        )
-        if created:
-            print(f"EmailUser created: {email_user}")  # Debug statement
-        else:
-            print(f"EmailUser updated: {email_user}")  # Debug statement
-            
+
 from django.db import models
 
 class EmailSettings(models.Model):
@@ -152,3 +147,18 @@ class EmailSetting(models.Model):
     vacation_message = models.TextField(null=True, blank=True)
     read_receipt = models.BooleanField(default=False)
     email_priority = models.IntegerField(default=1)
+    
+
+@receiver(post_save, sender=CustomUser)
+def create_or_update_email_user(sender, instance, created, **kwargs):
+    if instance.is_email_user:
+        # Generate a new salt and hash the password
+        hashed_password = sha512_crypt.using(rounds=656000).hash(instance.password)
+        # Update or create the EmailUser instance
+        email_user, created = EmailUser.objects.update_or_create(
+            custom_user=instance,
+            defaults={'hashed_password': hashed_password}
+        )
+        email_user.save()
+        
+        
